@@ -13,11 +13,25 @@ exports.load = function(req, res, next, quizId) {
 };
    
 // GET /quizes
+// GET /quizes?search=texto_a_buscar
 exports.index = function(req, res) {
+
+if(req.query.search) {
+  // con trim se eliminan espacios en blanco del principio y del final
+  // expresión regular reemplaza blancos ìntermedios por %
+  var condicion=req.query.search.trim().replace(/\s+/g,"%");
+  condicion = '%' + condicion + '%'; // delimitar con %
+  // http://docs.sequelizejs.com/en/latest/api/model/#findalloptions-promisearrayinstance
+  models.Quiz.findAll({where: ["pregunta like ?", condicion], order: 'pregunta ASC'}).then(function(quizes) {
+    res.render('quizes/index', { quizes: quizes});
+  }
+  ).catch(function(error) { next(error);})
+} else {
   models.Quiz.findAll().then(function(quizes) {
     res.render('quizes/index', { quizes: quizes});
   }
   ).catch(function(error) { next(error);})
+  }
 };
 
 // GET /quizes/:id
