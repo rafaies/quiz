@@ -15,23 +15,24 @@ exports.load = function(req, res, next, quizId) {
 // GET /quizes
 // GET /quizes?search=texto_a_buscar
 exports.index = function(req, res) {
+  // si en la consulta no se pone nada, saldrán todas las preguntas
+  var consulta ={};
 
 if(req.query.search) {
   // con trim se eliminan espacios en blanco del principio y del final
-  // expresión regular reemplaza blancos ìntermedios por %
-  var condicion=req.query.search.trim().replace(/\s+/g,"%");
-  condicion = '%' + condicion + '%'; // delimitar con %
+  // expresión regular reemplaza blancos intermedios por % 
+  // delimitar con %
+  var condicion='%' + req.query.search.trim().replace(/\s+/g,"%") + '%';
+
   // http://docs.sequelizejs.com/en/latest/api/model/#findalloptions-promisearrayinstance
-  models.Quiz.findAll({where: ["pregunta like ?", condicion], order: 'pregunta ASC'}).then(function(quizes) {
-    res.render('quizes/index', { quizes: quizes});
+  // lower para que las búsquedas no sean case sensitive
+  consulta= {where: ["lower(pregunta) like lower(?)", condicion], order: 'pregunta ASC'};
+  }
+ 
+models.Quiz.findAll(consulta).then(function(quizes) {
+  res.render('quizes/index', { quizes: quizes});
   }
   ).catch(function(error) { next(error);})
-} else {
-  models.Quiz.findAll().then(function(quizes) {
-    res.render('quizes/index', { quizes: quizes});
-  }
-  ).catch(function(error) { next(error);})
-  }
 };
 
 // GET /quizes/:id
