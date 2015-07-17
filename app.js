@@ -25,7 +25,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 // Quiz 11 paso 3 - moulo 8 página 6
 //app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded());
+//app.use(bodyParser.urlencoded());
+// Pongo a true por aviso
+/*
+$ foreman start
+19:29:28 web.1  | started with pid 3928
+19:29:28 web.1  | Fri, 17 Jul 2015 17:29:28 GMT body-parser deprecated undefined extended: provide extended option at app.js:28:20
+*/
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -48,7 +55,8 @@ if (app.get('env') === 'development') {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
-            error: err
+            error: err,
+	    errors: []	
         });
     });
 }
@@ -59,7 +67,8 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        error: {}
+        error: {},
+        errors: []	
     });
 });
 
