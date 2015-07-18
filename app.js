@@ -7,8 +7,11 @@ var bodyParser = require('body-parser');
 
 var partials = require('express-partials');  // importa factoría
 
-var routes = require('./routes/index');
+// Como las actualizaciones de un recurso deben realizarse en REST con el método PUT de HTTP, se 
+// utiliza el convenio methodoverride para encapsularlo como un parámetro oculto en el path
+var methodOverride = require('method-override');  
 
+var routes = require('./routes/index');
 
 var app = express();
 
@@ -34,6 +37,7 @@ $ foreman start
 */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(methodOverride('_method'));  // Para REST PUT en un POST HTTP
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);

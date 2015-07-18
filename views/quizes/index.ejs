@@ -1,8 +1,15 @@
+<% if (quizes.length > 0) {%>
 <table>
 <% var i; for (i=0; i < quizes.length; i++) { %>        
-<tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr> 
+<tr>
+  <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
+  <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
+</tr> 
 <% } %>
 </table>
+<% } else { %>
+       <p>No hay resultados para su búsqueda</p>
+<% } %>
 <p>
 <a href="/quizes/new"><button type="button">Crear pregunta</button></a>
 </p>	
