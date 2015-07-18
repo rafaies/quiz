@@ -73,7 +73,7 @@ exports.create = function(req, res) {
 	.then(function(){ res.redirect('/quizes') } )  
       }   // Redirección HTTP (URL relativo) a lista de preguntas
     }
-  );
+  ).catch(function(error){next(error)});
 };
 
 // GET /quizes/:id/edit
@@ -99,5 +99,12 @@ exports.update = function(req, res) {
         .then( function(){ res.redirect('/quizes');});
       }     // Redirección HTTP a lista de preguntas (URL relativo)
     }
-  );
+  ).catch(function(error){next(error)});
+};
+
+// DELETE /quizes/:id
+exports.destroy = function(req, res) {
+  req.quiz.destroy().then( function() {
+    res.redirect('/quizes');
+  }).catch(function(error){next(error)});
 };
