@@ -37,7 +37,7 @@ models.Quiz.findAll(consulta).then(function(quizes) {
 
 // GET /quizes/:id
 exports.show = function(req, res) {
-  res.render('quizes/show', { quiz: req.quiz, tema: req.quiz.tema, errors: []});
+  res.render('quizes/show', { quiz: req.quiz, errors: []});
 };  // req.quiz: instancia de quiz cargada con autoload
 
 // GET /quizes/:id/answer
@@ -67,7 +67,7 @@ exports.create = function(req, res) {
   .then(
     function(err){
       if (err) {
-	res.render('quizes/new', {quiz: quiz, tema: tema, errors: err.errors});
+	res.render('quizes/new', {quiz: quiz, errors: err.errors});
       } else {
 	quiz 
 	.save({fields: ["pregunta", "respuesta", "tema"]})

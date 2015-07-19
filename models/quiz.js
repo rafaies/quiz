@@ -12,7 +12,9 @@ module.exports = function(sequelize, DataTypes) {
               },
 	      tema: {
 		type: DataTypes.STRING,
-		validate: { notEmpty: {msg: "-> Falta Tema"} }
+		// es difícil que salga este mensaje porque el select por defecto tiene Otro
+                // he probado a envíar "" como option del select y sí sale "Falta Tema"
+		validate: { notEmpty: {msg: "-> Falta Tema"} }  
               }
 	    }
 	 );
