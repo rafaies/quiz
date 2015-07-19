@@ -37,7 +37,7 @@ models.Quiz.findAll(consulta).then(function(quizes) {
 
 // GET /quizes/:id
 exports.show = function(req, res) {
-  res.render('quizes/show', { quiz: req.quiz, errors: []});
+  res.render('quizes/show', { quiz: req.quiz, tema: req.quiz.tema, errors: []});
 };  // req.quiz: instancia de quiz cargada con autoload
 
 // GET /quizes/:id/answer
@@ -52,7 +52,7 @@ exports.answer = function(req, res) {
 // GET /quizes/new
 exports.new = function(req, res) {
   var quiz = models.Quiz.build(  // crea objeto quiz
-    {pregunta: "Pregunta", respuesta: "Respuesta"}
+    {pregunta: "Pregunta", respuesta: "Respuesta", tema: "Tema"} 
   );
   res.render('quizes/new', {quiz: quiz, errors: []});
 };
@@ -61,15 +61,16 @@ exports.new = function(req, res) {
 exports.create = function(req, res) {
   var quiz = models.Quiz.build(req.body.quiz);
 // guarda en DB los campos pregunta y respuesta de quiz si no hay error
+// también el tema
   quiz
   .validate()
   .then(
     function(err){
       if (err) {
-	res.render('quizes/new', {quiz: quiz, errors: err.errors});
+	res.render('quizes/new', {quiz: quiz, tema: tema, errors: err.errors});
       } else {
 	quiz 
-	.save({fields: ["pregunta", "respuesta"]})
+	.save({fields: ["pregunta", "respuesta", "tema"]})
 	.then(function(){ res.redirect('/quizes') } )  
       }   // Redirección HTTP (URL relativo) a lista de preguntas
     }
@@ -86,6 +87,7 @@ exports.edit = function(req, res) {
 exports.update = function(req, res) {
   req.quiz.pregunta  = req.body.quiz.pregunta;
   req.quiz.respuesta = req.body.quiz.respuesta;
+  req.quiz.tema = req.body.quiz.tema;  // tema ejercicio módulo 8
 
   req.quiz
   .validate()
@@ -95,7 +97,7 @@ exports.update = function(req, res) {
         res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
       } else {
         req.quiz     // save: guarda campos pregunta y respuesta en DB
-        .save( {fields: ["pregunta", "respuesta"]})
+        .save( {fields: ["pregunta", "respuesta", "tema"]})
         .then( function(){ res.redirect('/quizes');});
       }     // Redirección HTTP a lista de preguntas (URL relativo)
     }
