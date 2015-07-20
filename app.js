@@ -10,6 +10,8 @@ var partials = require('express-partials');  // importa factoría
 // Como las actualizaciones de un recurso deben realizarse en REST con el método PUT de HTTP, se 
 // utiliza el convenio methodoverride para encapsularlo como un parámetro oculto en el path
 var methodOverride = require('method-override');  
+// Se importa el paquete express-session instalado con npm
+var session = require('express-session');
 
 var routes = require('./routes/index');
 
@@ -36,9 +38,40 @@ $ foreman start
 19:29:28 web.1  | Fri, 17 Jul 2015 17:29:28 GMT body-parser deprecated undefined extended: provide extended option at app.js:28:20
 */
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(cookieParser('Quiz 2015')); //añadir semilla ‘Quiz 2015’ para cifrar cookie
+
+//app.use(session()); //Instalar MW session
+/*
+Warnings tras foreman start
+http://stackoverflow.com/questions/24477035/express-4-0-express-session-with-odd-warning-message
+https://www.npmjs.com/package/express-session
+
+19:28:37 web.1  | Mon, 20 Jul 2015 17:28:37 GMT express-session deprecated undefined resave option; provide resave option at app.js:43:9
+19:28:37 web.1  | Mon, 20 Jul 2015 17:28:37 GMT express-session deprecated undefined saveUninitialized option; provide saveUninitialized option at app.js:43:9
+19:28:37 web.1  | Mon, 20 Jul 2015 17:28:37 GMT express-session deprecated req.secret; provide secret option at app.js:43:9
+*/
+app.use(session({
+    secret: 'cookie_secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
 app.use(methodOverride('_method'));  // Para REST PUT en un POST HTTP
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Helpers dinamicos:
+app.use(function(req, res, next) {
+
+  // guardar path en session.redir para despues de login
+  if (!req.path.match(/\/login|\/logout/)) {
+    req.session.redir = req.path;
+  }
+
+  // Hacer visible req.session en las vistas
+  res.locals.session = req.session;
+  next();
+});
 
 app.use('/', routes);
 
