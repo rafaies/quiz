@@ -3,23 +3,28 @@
 <% var i; for (i=0; i < quizes.length; i++) { %>        
 <tr>
   <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a> (<%= quizes[i].tema %>)</td>
-  <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
-  <td>
-    <form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
-      <button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">
-        borrar
-      </button>
-    </form>
-  </td>
+  <%if(session.user){%>
+    <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
+    <td>
+      <form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
+        <button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">
+          borrar
+        </button>
+      </form>
+    </td>
+  <%}%>
 </tr> 
 <% } %>
 </table>
 <% } else { %>
        <p>No hay resultados para su búsqueda</p>
 <% } %>
-<p>
-<a href="/quizes/new"><button type="button">Crear pregunta</button></a>
-</p>	
+
+<%if(session.user){%>
+  <p>
+    <a href="/quizes/new"><button type="button">Crear pregunta</button></a>
+  </p>
+<%}%>	
 <div id="buscar-preguntas">
 <form method="get" action="/quizes">
 <label for="search">Buscador de Preguntas</label>
