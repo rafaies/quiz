@@ -60,7 +60,7 @@ app.use(session({
 app.use(methodOverride('_method'));  // Para REST PUT en un POST HTTP
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Helpers dinamicos:
+// Helpers dinámicos:
 app.use(function(req, res, next) {
 
   // guardar path en session.redir para despues de login
@@ -70,6 +70,21 @@ app.use(function(req, res, next) {
 
   // Hacer visible req.session en las vistas
   res.locals.session = req.session;
+  next();
+});
+
+// auto-logout de sesión ejercicio módulo 9
+app.use( function(req, res, next) {
+  if ( req.session.user ) {
+    if ( Date.now() - req.session.user.lastRequestTime > 120000 ) {  // 2 segundos = 120000ms = 2*60*1000
+      delete req.session.user; 
+      req.session.errors = [ { "message": 'Sesión finalizada por inactividad' } ];
+      res.redirect("/login");
+      return;
+    } else {
+        req.session.user.lastRequestTime = Date.now();
+      }
+  }
   next();
 });
 

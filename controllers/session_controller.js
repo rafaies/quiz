@@ -15,7 +15,7 @@ exports.new = function(req, res) {
     res.render('sessions/new', {errors: errors});
 };
 
-// POST /login   -- Crear la sesion si usuario se autentica
+// POST /login   -- Crear la sesión si usuario se autentica
 exports.create = function(req, res) {
     var login     = req.body.login;
     var password  = req.body.password;
@@ -31,13 +31,14 @@ exports.create = function(req, res) {
 
         // Crear req.session.user y guardar campos   id  y  username
         // La sesión se define por la existencia de:    req.session.user
-        req.session.user = {id:user.id, username:user.username};
+	// ejercicio módulo 9 auto-logout, se añade lastRequestTime (idea aportada al foro por Albert Vila Calvo)
+        req.session.user = {id:user.id, username:user.username, lastRequestTime: Date.now()};
 
         res.redirect(req.session.redir.toString());// redirección a path anterior a login
     });
 };
 
-// DELETE /logout   -- Destruir sesion 
+// DELETE /logout   -- Destruir sesión 
 exports.destroy = function(req, res) {
     delete req.session.user;
     res.redirect(req.session.redir.toString()); // redirect a path anterior a login
