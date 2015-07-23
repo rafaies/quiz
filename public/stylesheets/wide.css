@@ -4,5 +4,9 @@ body { background: #999; }
 
 nav       { float: left; width: 15%; height: 200px ;}
 nav span  { margin: 0px 100px 0px 0px;}
-section   { float: right; width: 80%; height: 200px ;}
+/* cambio height por min-height para que al añadir más preguntas no sobrepasen el footer */
+section   { float: right; width: 80%; min-height: 200px ;} 
 footer    { clear: both;  display: block; }
+#buscar-preguntas, #crear-pregunta, #no-resultados  { text-align: left; padding-bottom: 10px;}
+#crear-pregunta { margin-left: 50px; }
+

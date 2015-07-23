@@ -1,3 +1,15 @@
+<%if(session.user){%>
+  <p id="crear-pregunta">
+    <a href="/quizes/new"><button type="button">Crear pregunta</button></a>
+  </p>
+<%}%>
+<div id="buscar-preguntas">
+<form method="get" action="/quizes">
+<label for="search">Buscador de Preguntas</label>
+<input type="text" id="search" name="search" placeholder="Texto a buscar" />
+<input type="submit" value="Buscar" />
+</form>
+</div>
 <% if (quizes.length > 0) {%>
 <table>
 <% var i; for (i=0; i < quizes.length; i++) { %>        
@@ -17,18 +29,6 @@
 <% } %>
 </table>
 <% } else { %>
-       <p>No hay resultados para su búsqueda</p>
+       <p id="no-resultados">No hay resultados para su búsqueda</p>
 <% } %>
 
-<%if(session.user){%>
-  <p>
-    <a href="/quizes/new"><button type="button">Crear pregunta</button></a>
-  </p>
-<%}%>	
-<div id="buscar-preguntas">
-<form method="get" action="/quizes">
-<label for="search">Buscador de Preguntas</label>
-<input type="text" id="search" name="search" placeholder="Texto a buscar" />
-<input type="submit" value="Buscar" />
-</form>
-</div>
