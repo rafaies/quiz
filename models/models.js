@@ -36,8 +36,15 @@ var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 var comment_path = path.join(__dirname,'comment');
 var Comment = sequelize.import(comment_path);
 
+//relación Quiz 1:n Comment. Una pregunta tiene muchos comentarios.
 Comment.belongsTo(Quiz);
-Quiz.hasMany(Comment);
+//Quiz.hasMany(Comment);
+// lo anterior deja en la base de datos comentarios con columna QuizId a Null en tabla Comments
+// cuando se borran preguntas con comentarios, se puede hacer borrado en cascada
+// http://docs.sequelizejs.com/en/latest/api/associations/
+// Creating an association will add a foreign key constraint to the attributes. All associations use 
+// CASCADE on update and SET NULL on delete, except for n:m, which also uses CASCADE on delete
+Quiz.hasMany(Comment, {'hooks': true, 'constraints': true, onDelete: 'cascade'});
 
 exports.Quiz = Quiz; // exportar definición de tabla Quiz
 exports.Comment = Comment;
